@@ -1,0 +1,1090 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Birthday Portal - Anushka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neonPink: '#ff007f',
+                        neonBlue: '#00f3ff',
+                        neonPurple: '#b000ff',
+                        neonGreen: '#00ff66',
+                        darkBg: '#05050a'
+                    },
+                    boxShadow: {
+                        'neon-pink': '0 0 20px rgba(255, 0, 127, 0.4), inset 0 0 10px rgba(255, 0, 127, 0.2)',
+                        'neon-blue': '0 0 20px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2)',
+                        'neon-purple': '0 0 20px rgba(176, 0, 255, 0.4), inset 0 0 10px rgba(176, 0, 255, 0.2)',
+                        'neon-green': '0 0 20px rgba(0, 255, 102, 0.4), inset 0 0 10px rgba(0, 255, 102, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #05050a;
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-text-pink {
+            text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
+        }
+        .neon-text-blue {
+            text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
+        }
+        .neon-text-purple {
+            text-shadow: 0 0 10px #b000ff, 0 0 20px #b000ff;
+        }
+        .neon-text-green {
+            text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66;
+        }
+        .slide-hidden {
+            display: none !important;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .slide-active {
+            display: flex !important;
+            opacity: 1;
+            transform: scale(1);
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .flower-bloom {
+            animation: bloomEffect 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes bloomEffect {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05050a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b000ff;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-neonPink selection:text-white box-border">
+
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Synthetic Sound Synthesizer / Audio fallback engine -->
+    <audio id="bgAudio" src="./audio.mp3" preload="auto" loop></audio>
+
+    <header class="relative z-10 w-full px-4 py-2.5 flex justify-between items-center max-w-md mx-auto">
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleAudio()" id="audioBtn" class="orbitron text-[10px] bg-neutral-900/90 border border-neonPink/60 px-3 py-1.5 rounded-lg text-neonPink shadow-neon-pink hover:bg-neutral-800 transition flex items-center space-x-1.5 cursor-pointer">
+                <i id="audioIcon" class="fa-solid fa-volume-high"></i>
+                <span id="audioText">SOUND ON</span>
+            </button>
+        </div>
+        <div id="slideIndicator" class="orbitron text-[10px] sm:text-xs bg-neutral-900/90 border border-neonPurple px-3 py-1.5 rounded-lg text-neonPurple shadow-neon-purple tracking-wider">
+            <span id="chapterTitle">WELCOME</span> &nbsp;|&nbsp; <span id="currentSlideNum">1</span>/7
+        </div>
+    </header>
+
+    <main class="relative z-10 flex-grow flex items-center justify-center px-4 py-1.5 max-w-md mx-auto w-full box-border">
+
+        <!-- Slide 1: Welcome -->
+        <div id="slide1" class="slide-active flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonPink/40 p-5 sm:p-6 rounded-2xl shadow-neon-pink box-border">
+            <div class="w-12 h-12 rounded-xl bg-neonPink/10 border border-neonPink flex items-center justify-center mb-3 shadow-neon-pink animate-pulse">
+                <i class="fa-solid fa-wifi text-2xl text-neonPink"></i>
+            </div>
+            <h1 class="orbitron text-base sm:text-lg font-extrabold mb-2 neon-text-pink tracking-wide">ANUSHKA'S CELESTIAL GATE</h1>
+            <p class="text-neutral-300 text-xs max-w-xs mb-5 leading-relaxed">
+                This secure virtual birthday portal is custom-coded for Anushka. Initialize discovery to enter! 
+            </p>
+            <button onclick="nextSlide()" class="orbitron w-full max-w-xs py-3 bg-gradient-to-r from-neonPink to-neonPurple text-white font-bold rounded-xl shadow-neon-pink hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-2 text-xs tracking-wider cursor-pointer">
+                <span>INITIALIZE DISCOVERY</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Slide 2: DOB Verification -->
+        <div id="slide2" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonBlue/40 p-4 sm:p-5 rounded-2xl shadow-neon-blue box-border">
+            <div class="w-full flex justify-between items-center mb-3">
+                <span class="orbitron text-[10px] text-neonBlue tracking-widest uppercase">CHAPTER I</span>
+                <span class="orbitron text-[10px] text-neutral-400">2 OF 7</span>
+            </div>
+            <h2 class="orbitron text-sm sm:text-base font-bold mb-1 neon-text-blue">IDENTITY VERIFICATION</h2>
+            <p class="text-[9px] text-neutral-400 mb-2 orbitron">SELECT ANUSHKA'S BIRTHDAY (01 / 10 / 2010)</p>
+            
+            <p class="text-neutral-300 text-[11px] mb-3 leading-relaxed">
+                Please select the exact birth date from the selectors below to unlock the secure portal! 
+            </p>
+
+            <div class="w-full bg-neutral-950/90 border border-neonBlue/30 p-3 rounded-xl mb-3 flex flex-col items-center">
+                <label class="orbitron text-[9px] text-neutral-400 mb-2">SELECT BIRTH DATE (DD / MM / YYYY)</label>
+                <div class="flex space-x-2 mb-2 w-full justify-center">
+                    <select id="selectDay" onchange="playClickSound(); verifyDobSelection()" class="bg-neutral-900 border border-neonBlue/50 text-white orbitron text-xs py-2 px-2 rounded-lg focus:outline-none focus:border-neonBlue cursor-pointer">
+                        <option value="">Day</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="31">31</option>
+                    </select>
+                    <select id="selectMonth" onchange="playClickSound(); verifyDobSelection()" class="bg-neutral-900 border border-neonBlue/50 text-white orbitron text-xs py-2 px-2 rounded-lg focus:outline-none focus:border-neonBlue cursor-pointer">
+                        <option value="">Month</option>
+                        <option value="01">Jan (01)</option>
+                        <option value="02">Feb (02)</option>
+                        <option value="03">Mar (03)</option>
+                        <option value="04">Apr (04)</option>
+                        <option value="05">May (05)</option>
+                        <option value="06">Jun (06)</option>
+                        <option value="07">Jul (07)</option>
+                        <option value="08">Aug (08)</option>
+                        <option value="09">Sep (09)</option>
+                        <option value="10">Oct (10)</option>
+                        <option value="11">Nov (11)</option>
+                        <option value="12">Dec (12)</option>
+                    </select>
+                    <select id="selectYear" onchange="playClickSound(); verifyDobSelection()" class="bg-neutral-900 border border-neonBlue/50 text-white orbitron text-xs py-2 px-2 rounded-lg focus:outline-none focus:border-neonBlue cursor-pointer">
+                        <option value="">Year</option>
+                        <option value="2008">2008</option>
+                        <option value="2009">2009</option>
+                        <option value="2010">2010</option>
+                        <option value="2011">2011</option>
+                        <option value="2012">2012</option>
+                    </select>
+                </div>
+                <div id="dobHint" class="text-[10px] orbitron text-amber-400">
+                    Select 01 / 10 / 2010 to verify! 
+                </div>
+            </div>
+
+            <div class="flex space-x-3 w-full">
+                <button onclick="playClickSound(); prevSlide()" class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-300 font-bold rounded-xl hover:bg-neutral-700 transition text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> BACK
+                </button>
+                <button id="nextBtn2" onclick="playClickSound(); checkDobAndUnlock()" disabled class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-500 font-bold rounded-xl cursor-not-allowed transition text-xs">
+                    VERIFY <i class="fa-solid fa-unlock ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide 3: Garden & Flowers -->
+        <div id="slide3" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonPurple/40 p-4 sm:p-5 rounded-2xl shadow-neon-purple box-border">
+            <div class="w-full flex justify-between items-center mb-2">
+                <span class="orbitron text-[10px] text-neonPurple tracking-widest uppercase">CHAPTER II</span>
+                <span class="orbitron text-[10px] text-neutral-400">3 OF 7</span>
+            </div>
+            <h2 class="orbitron text-sm sm:text-base font-bold mb-1 neon-text-purple">COSMIC GARDEN & BOUQUET</h2>
+            <p class="text-[9px] text-neutral-400 mb-2 orbitron">PICK 3 FAVORITE FLOWERS</p>
+
+            <div class="grid grid-cols-3 gap-2 w-full mb-2.5">
+                <button onclick="playFlowerSound(); selectFlower('', 'Magic Rose')" class="flower-btn bg-neutral-950 border border-neonPurple/30 p-2 rounded-xl flex flex-col items-center hover:border-neonPurple transition cursor-pointer">
+                    <span class="text-lg mb-0.5"></span>
+                    <span class="orbitron text-[8px] text-neutral-300">Rose</span>
+                </button>
+                <button onclick="playFlowerSound(); selectFlower('', 'Cosmic Lily')" class="flower-btn bg-neutral-950 border border-neonPurple/30 p-2 rounded-xl flex flex-col items-center hover:border-neonPurple transition cursor-pointer">
+                    <span class="text-lg mb-0.5"></span>
+                    <span class="orbitron text-[8px] text-neutral-300">Lily</span>
+                </button>
+                <button onclick="playFlowerSound(); selectFlower('', 'Golden Sun')" class="flower-btn bg-neutral-950 border border-neonPurple/30 p-2 rounded-xl flex flex-col items-center hover:border-neonPurple transition cursor-pointer">
+                    <span class="text-lg mb-0.5"></span>
+                    <span class="orbitron text-[8px] text-neutral-300">Sun</span>
+                </button>
+                <button onclick="playFlowerSound(); selectFlower('', 'Cyber Tulip')" class="flower-btn bg-neutral-950 border border-neonPurple/30 p-2 rounded-xl flex flex-col items-center hover:border-neonPurple transition cursor-pointer">
+                    <span class="text-lg mb-0.5"></span>
+                    <span class="orbitron text-[8px] text-neutral-300">Tulip</span>
+                </button>
+                <button onclick="playFlowerSound(); selectFlower('', 'Neon Hibiscus')" class="flower-btn bg-neutral-950 border border-neonPurple/30 p-2 rounded-xl flex flex-col items-center hover:border-neonPurple transition cursor-pointer">
+                    <span class="text-lg mb-0.5"></span>
+                    <span class="orbitron text-[8px] text-neutral-300">Hibiscus</span>
+                </button>
+                <button onclick="playFlowerSound(); selectFlower('', 'Astral Daisy')" class="flower-btn bg-neutral-950 border border-neonPurple/30 p-2 rounded-xl flex flex-col items-center hover:border-neonPurple transition cursor-pointer">
+                    <span class="text-lg mb-0.5"></span>
+                    <span class="orbitron text-[8px] text-neutral-300">Daisy</span>
+                </button>
+            </div>
+
+            <div class="w-full bg-neutral-950/90 border border-neonPurple/50 p-2.5 rounded-xl mb-2.5 flex flex-col items-center">
+                <span class="orbitron text-[8px] text-neutral-400 mb-1">GARDEN PLOTS (TAP TO PLANT MORE)</span>
+                <div id="gardenSandbox" onclick="playFlowerSound(); plantExtraFlower(event)" class="w-full h-16 bg-neutral-900/60 rounded-lg border border-neonPurple/20 relative overflow-hidden flex items-center justify-center cursor-crosshair shadow-inner">
+                    <span id="gardenPlaceholder" class="text-[9px] text-neutral-500 orbitron pointer-events-none">SELECT 3 FLOWERS OR TAP HERE</span>
+                </div>
+                <div class="w-full border-t border-neonPurple/20 pt-1 mt-1">
+                    <p id="gardenUsageText" class="text-[10px] text-neutral-300 italic">
+                        "Your chosen flowers will bloom around the birthday cake & altar!"
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex space-x-3 w-full">
+                <button onclick="playClickSound(); prevSlide()" class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-300 font-bold rounded-xl hover:bg-neutral-700 transition text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> BACK
+                </button>
+                <button id="nextBtn3" onclick="playClickSound(); nextSlide()" disabled class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-500 font-bold rounded-xl cursor-not-allowed transition text-xs">
+                    NEXT <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide 4: 3D Matrix -->
+        <div id="slide4" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonPink/40 p-4 sm:p-5 rounded-2xl shadow-neon-pink box-border">
+            <div class="w-full flex justify-between items-center mb-2">
+                <span class="orbitron text-[10px] text-neonPink tracking-widest uppercase">CHAPTER III</span>
+                <span class="orbitron text-[10px] text-neutral-400">4 OF 7</span>
+            </div>
+            <h2 class="orbitron text-sm sm:text-base font-bold mb-1 neon-text-pink">3D ANUSHKA MATRIX</h2>
+            <p class="text-[9px] text-neutral-400 mb-2 orbitron">DRAG OR SWIPE TO ROTATE 3D TEXT</p>
+
+            <div id="threeContainer" class="w-full h-36 bg-neutral-950 rounded-xl border border-neonPink/30 flex items-center justify-center relative mb-3 overflow-hidden cursor-grab active:cursor-grabbing">
+                <!-- Three.js Canvas initialized dynamically -->
+            </div>
+
+            <p class="text-neutral-300 text-xs italic mb-3 leading-relaxed">
+                "Wishing you all the happiness, laughter, and success in the world today!"
+            </p>
+
+            <div class="flex space-x-3 w-full">
+                <button onclick="prevSlide()" class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-300 font-bold rounded-xl hover:bg-neutral-700 transition text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> BACK
+                </button>
+                <button onclick="nextSlide()" class="orbitron flex-1 py-2.5 bg-gradient-to-r from-neonPink to-neonPurple text-white font-bold rounded-xl shadow-neon-pink hover:scale-105 transition text-xs cursor-pointer">
+                    LETTER <i class="fa-solid fa-envelope-open-text ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide 5: Digital Letter -->
+        <div id="slide5" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonBlue/40 p-4 sm:p-5 rounded-2xl shadow-neon-blue box-border">
+            <div class="w-full flex justify-between items-center mb-2">
+                <span class="orbitron text-[10px] text-neonBlue tracking-widest uppercase">CHAPTER IV</span>
+                <span class="orbitron text-[10px] text-neutral-400">5 OF 7</span>
+            </div>
+            <h2 class="orbitron text-sm sm:text-base font-bold mb-1 neon-text-blue">DIGITAL LETTER</h2>
+            <p class="text-[9px] text-neutral-400 mb-2 orbitron">AUTO-TYPING BIRTHDAY NOTE</p>
+
+            <div class="w-full bg-neutral-950 border border-neonBlue/30 p-3.5 rounded-xl mb-3 h-40 overflow-y-auto text-neutral-200 text-xs leading-relaxed font-mono flex flex-col text-left shadow-inner relative">
+                <div class="flex justify-between items-center mb-2 border-b border-neonBlue/20 pb-1">
+                    <span class="text-neonBlue font-bold orbitron text-[9px] tracking-widest"> TO ANUSHKA </span>
+                    <button onclick="playClickSound(); restartTyping()" class="text-[8px] bg-neutral-900 text-neonBlue border border-neonBlue/40 px-2 py-0.5 rounded hover:bg-neutral-800 transition cursor-pointer">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Replay
+                    </button>
+                </div>
+                <div id="typewriterText" class="whitespace-pre-wrap"></div>
+            </div>
+
+            <div class="flex space-x-3 w-full">
+                <button onclick="playClickSound(); prevSlide()" class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-300 font-bold rounded-xl hover:bg-neutral-700 transition text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> BACK
+                </button>
+                <button onclick="playClickSound(); nextSlide()" class="orbitron flex-1 py-2.5 bg-gradient-to-r from-neonBlue to-neonPurple text-white font-bold rounded-xl shadow-neon-blue hover:scale-105 transition text-xs cursor-pointer">
+                    CAKE <i class="fa-solid fa-cake-candles ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide 6: Cake Cutting -->
+        <div id="slide6" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonGreen/40 p-4 sm:p-5 rounded-2xl shadow-neon-green box-border">
+            <div class="w-full flex justify-between items-center mb-2">
+                <span class="orbitron text-[10px] text-neonGreen tracking-widest uppercase">CHAPTER V</span>
+                <span class="orbitron text-[10px] text-neutral-400">6 OF 7</span>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-neonGreen/10 border border-neonGreen flex items-center justify-center mb-1.5 shadow-neon-green animate-pulse">
+                <i class="fa-solid fa-cake-candles text-lg text-neonGreen"></i>
+            </div>
+            <h2 class="orbitron text-sm sm:text-base font-extrabold mb-1 text-transparent bg-clip-text bg-gradient-to-r from-neonGreen via-neonBlue to-neonPink">
+                Happy Birthday! 
+            </h2>
+            <p id="cakeInstructionText" class="text-neutral-300 text-xs max-w-sm mb-2.5 leading-relaxed">
+                Click the <b>"SLICE CAKE"</b> button below to virtually cut the birthday cake!
+            </p>
+
+            <div id="cakeFlowerDecor" class="text-lg mb-2.5 flex space-x-2 bg-neutral-950/80 px-3 py-1 rounded-full border border-neonGreen/40 shadow-neon-green">
+                <span></span><span></span><span></span>
+            </div>
+
+            <div id="cakeArena" class="w-full max-w-xs bg-neutral-950 border border-neonGreen/40 p-3 rounded-xl mb-3 flex flex-col items-center relative overflow-hidden shadow-[0_0_20px_rgba(0,255,102,0.2)] select-none">
+                <div class="absolute inset-0 opacity-15 bg-[linear-gradient(to_right,#00ff66_1px,transparent_1px),linear-gradient(to_bottom,#00ff66_1px,transparent_1px)] bg-[size:15px_15px] pointer-events-none"></div>
+
+                <div id="candlesContainer" class="flex space-x-4 mb-2.5 relative z-10 transition-all duration-500">
+                    <div class="candle flex flex-col items-center">
+                        <div id="flame1" class="flame w-2 h-3.5 bg-amber-300 rounded-full animate-ping shadow-[0_0_10px_#00ff66]"></div>
+                        <div class="w-1.5 h-5 bg-neonPink rounded-t"></div>
+                    </div>
+                    <div class="candle flex flex-col items-center">
+                        <div id="flame2" class="flame w-2 h-3.5 bg-amber-300 rounded-full animate-ping shadow-[0_0_10px_#00f3ff]" style="animation-delay: 0.2s;"></div>
+                        <div class="w-1.5 h-5 bg-neonBlue rounded-t"></div>
+                    </div>
+                    <div class="candle flex flex-col items-center">
+                        <div id="flame3" class="flame w-2 h-3.5 bg-amber-300 rounded-full animate-ping shadow-[0_0_10px_#ff007f]" style="animation-delay: 0.4s;"></div>
+                        <div class="w-1.5 h-5 bg-neonGreen rounded-t"></div>
+                    </div>
+                </div>
+
+                <div id="cakeBodyContainer" class="relative z-10 w-40 h-16 flex items-center justify-center transition-all duration-700">
+                    <div id="cakeLeft" class="w-1/2 h-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 rounded-l-lg shadow-md border border-r-0 border-white/30 flex flex-col items-center justify-center relative transition-transform duration-700 origin-left">
+                        <div class="absolute top-1.5 w-full h-1 bg-white/40"></div>
+                        <span class="relative z-10 orbitron text-[8px] font-bold text-white tracking-wider"> </span>
+                    </div>
+                    
+                    <div id="cakeKnifeLine" class="w-1 h-16 bg-white shadow-[0_0_10px_#fff] relative z-20 opacity-0 transition-opacity duration-300">
+                        <div class="absolute -top-3.5 -left-2 text-sm animate-bounce"></div>
+                    </div>
+
+                    <div id="cakeRight" class="w-1/2 h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-r-lg shadow-md border border-l-0 border-white/30 flex flex-col items-center justify-center relative transition-transform duration-700 origin-right">
+                        <div class="absolute top-1.5 w-full h-1 bg-white/40"></div>
+                        <span class="relative z-10 orbitron text-[8px] font-bold text-white tracking-wider"> </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3 w-full mb-3">
+                <button id="cutCakeBtn" onclick="performVirtualCut()" class="orbitron w-full py-2.5 bg-neonGreen text-neutral-950 font-extrabold rounded-xl shadow-neon-green hover:scale-[1.02] transition-all text-xs cursor-pointer">
+                    SLICE CAKE NOW 
+                </button>
+            </div>
+
+            <button onclick="playClickSound(); prevSlide()" class="orbitron px-4 py-2 bg-neutral-800 text-neutral-400 font-bold rounded-xl hover:bg-neutral-700 transition-all text-xs cursor-pointer">
+                <i class="fa-solid fa-arrow-left mr-1"></i> BACK
+            </button>
+        </div>
+
+        <!-- Slide 7: Finale -->
+        <div id="slide7" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonPurple/50 p-4 sm:p-5 rounded-2xl shadow-[0_0_30px_rgba(176,0,255,0.3)] box-border">
+            <div class="w-10 h-10 rounded-xl bg-neonPurple/10 border border-neonPurple flex items-center justify-center mb-1.5 shadow-neon-purple">
+                <i class="fa-solid fa-code text-lg text-neonPurple"></i>
+            </div>
+            <h2 class="orbitron text-sm sm:text-base font-extrabold mb-1 neon-text-purple">PORTAL FINALE</h2>
+            <p class="text-[9px] text-neutral-400 mb-2.5 orbitron">CREATED WITH PASSION & CODE</p>
+
+            <div class="w-full bg-neutral-950 border border-neonPurple/40 p-3 rounded-xl mb-2.5 flex flex-col items-center relative shadow-inner">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neonPink to-neonBlue flex items-center justify-center text-white font-bold text-sm orbitron mb-1.5 shadow-neon-pink">
+                    
+                </div>
+                <h3 class="orbitron text-[11px] font-bold text-white mb-0.5">Developed by Sohom Giri</h3>
+                <p class="text-[9px] text-neutral-400 mb-2">Full-Stack Web Architect & Creative Coder</p>
+                <div class="flex space-x-2">
+                    <a href="https://www.instagram.com/itz_sg_063?stkn=MXYwam51bmxibmFnMw==" target="_blank" onclick="playClickSound()" class="orbitron text-[8px] bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2.5 py-1 rounded-lg shadow hover:scale-105 transition flex items-center space-x-1">
+                        <i class="fa-brands fa-instagram text-[10px]"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://github.com/your_github_username" target="_blank" onclick="playClickSound()" class="orbitron text-[8px] bg-neutral-800 border border-neutral-700 text-white px-2.5 py-1 rounded-lg shadow hover:bg-neutral-700 transition flex items-center space-x-1">
+                        <i class="fa-brands fa-github text-[10px]"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="w-full bg-neutral-950 border border-neonBlue/40 p-3 rounded-xl mb-2.5 flex flex-col items-center">
+                <span class="orbitron text-[9px] text-neonBlue uppercase tracking-wider block mb-2 font-bold"> Explore Previous 3 Websites</span>
+                <div class="grid grid-cols-3 gap-2 w-full">
+                    <a href="https://virat-kohli18-zh71.vercel.app/" target="_blank" onclick="playClickSound()" class="orbitron py-2 bg-neutral-900 border border-neonBlue/50 text-neonBlue font-bold rounded-lg text-[9px] hover:bg-neonBlue/10 transition shadow-neon-blue cursor-pointer flex flex-col items-center justify-center no-underline">
+                        <i class="fa-solid fa-globe mb-0.5 text-xs"></i>
+                        <span>Website 1</span>
+                    </a>
+                    <a href="https://r-music-alpha.vercel.app/" target="_blank" onclick="playClickSound()" class="orbitron py-2 bg-neutral-900 border border-neonPurple/50 text-neonPurple font-bold rounded-lg text-[9px] hover:bg-neonPurple/10 transition shadow-neon-purple cursor-pointer flex flex-col items-center justify-center no-underline">
+                        <i class="fa-solid fa-globe mb-0.5 text-xs"></i>
+                        <span>Website 2</span>
+                    </a>
+                    <a href="https://quiz18-alpha.vercel.app" target="_blank" onclick="playClickSound()" class="orbitron py-2 bg-neutral-900 border border-neonPink/50 text-neonPink font-bold rounded-lg text-[9px] hover:bg-neonPink/10 transition shadow-neon-pink cursor-pointer flex flex-col items-center justify-center no-underline">
+                        <i class="fa-solid fa-globe mb-0.5 text-xs"></i>
+                        <span>Website 3</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex space-x-3 w-full">
+                <button onclick="playClickSound(); prevSlide()" class="orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-300 font-bold rounded-xl hover:bg-neutral-700 transition text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> BACK
+                </button>
+                <button onclick="playClickSound(); restartPortal()" class="orbitron flex-1 py-2.5 bg-gradient-to-r from-neonPurple to-neonPink text-white font-bold rounded-xl shadow-neon-purple hover:scale-105 transition text-xs cursor-pointer">
+                    REPLAY 
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Slide -->
+        <div id="successSlide" class="slide-hidden flex-col items-center text-center w-full bg-neutral-900/95 backdrop-blur-xl border border-neonGreen p-5 sm:p-6 rounded-2xl shadow-[0_0_35px_rgba(0,255,102,0.5)] box-border">
+            <div class="text-2xl mb-2 animate-bounce"></div>
+            <h2 class="orbitron text-base sm:text-lg font-extrabold mb-1 text-neonGreen">WISH GRANTED!</h2>
+            <p class="text-neutral-300 text-xs max-w-sm mb-4 leading-relaxed">
+                May your special day bring you endless happiness, beautiful memories, and all success! 
+            </p>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full justify-center">
+                <button onclick="playClickSound(); goToDevPage()" class="orbitron px-4 py-2.5 bg-gradient-to-r from-neonPurple to-neonPink text-white font-extrabold rounded-xl shadow-neon-purple hover:scale-105 transition text-xs cursor-pointer">
+                    VIEW FINALE 
+                </button>
+                <button onclick="playClickSound(); restartPortal()" class="orbitron px-4 py-2.5 bg-neutral-800 text-neutral-300 font-bold rounded-xl hover:bg-neutral-700 transition text-xs cursor-pointer">
+                    REPLAY PORTAL 
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="relative z-10 text-center py-2 px-3 text-[9px] text-neutral-500 orbitron">
+        CREATED BY SOHOM GIRI
+    </footer>
+
+    <script>
+        // Web Audio API Synthesizer for robust sound effects (Tap, Typing, Blast, Flower)
+        let audioCtx = null;
+        let soundEnabled = true; // Default ON for sound effects
+        let bgMusicEnabled = true; // Separate control for background music
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        const bgAudio = document.getElementById('bgAudio');
+        let isAudioPlaying = false;
+
+        // Attempt autoplay on first user interaction or load
+        window.addEventListener('click', () => {
+            initAudioContext();
+            if (bgMusicEnabled && !isAudioPlaying && bgAudio) {
+                bgAudio.play().then(() => {
+                    isAudioPlaying = true;
+                    updateAudioButtonState();
+                }).catch(e => console.log("Autoplay waiting for user gesture"));
+            }
+        }, { once: true });
+
+        function toggleAudio() {
+            initAudioContext();
+            // This toggle button specifically controls the background music stream as requested
+            bgMusicEnabled = !bgMusicEnabled;
+            if (bgMusicEnabled) {
+                if (bgAudio) {
+                    bgAudio.play().then(() => {
+                        isAudioPlaying = true;
+                    }).catch(err => console.log(err));
+                }
+            } else {
+                if (bgAudio) {
+                    bgAudio.pause();
+                    isAudioPlaying = false;
+                }
+            }
+            updateAudioButtonState();
+            playClickSound();
+        }
+
+        function updateAudioButtonState() {
+            const icon = document.getElementById('audioIcon');
+            const text = document.getElementById('audioText');
+            if (bgMusicEnabled) {
+                if (icon) icon.className = 'fa-solid fa-volume-high';
+                if (text) text.innerText = 'MUSIC ON';
+            } else {
+                if (icon) icon.className = 'fa-solid fa-volume-xmark';
+                if (text) text.innerText = 'MUSIC OFF';
+            }
+        }
+
+        // Sound generators using Web Audio API (Always active for UI feedback)
+        function playClickSound() {
+            try {
+                initAudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        function playTypeSound() {
+            try {
+                initAudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300 + Math.random() * 200, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.04);
+            } catch (e) {}
+        }
+
+        function playFlowerSound() {
+            try {
+                initAudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.15); // G5
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        function playBlastSound() {
+            try {
+                initAudioContext();
+                // Create noise buffer for explosion / blast sound
+                const bufferSize = audioCtx.sampleRate * 0.5;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+                filter.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start();
+            } catch (e) {}
+        }
+
+        let currentSlide = 1;
+        const totalSlides = 7;
+        const chapterNames = ['WELCOME', 'VERIFY', 'GARDEN', '3D TEXT', 'LETTER', 'CAKE', 'FINALE'];
+
+        function updateDisplay() {
+            playClickSound();
+            for (let i = 1; i <= totalSlides; i++) {
+                const el = document.getElementById(`slide${i}`);
+                if (el) {
+                    el.classList.remove('slide-active');
+                    el.classList.add('slide-hidden');
+                }
+            }
+            const successEl = document.getElementById('successSlide');
+            if (successEl) {
+                successEl.classList.remove('slide-active');
+                successEl.classList.add('slide-hidden');
+            }
+
+            const activeEl = document.getElementById(`slide${currentSlide}`);
+            if (activeEl) {
+                activeEl.classList.remove('slide-hidden');
+                activeEl.classList.add('slide-active');
+            }
+
+            const currentNumEl = document.getElementById('currentSlideNum');
+            if (currentNumEl) currentNumEl.innerText = currentSlide;
+            
+            const chapterTitleEl = document.getElementById('chapterTitle');
+            if (chapterTitleEl) chapterTitleEl.innerText = chapterNames[currentSlide - 1];
+
+            if (currentSlide === 4) {
+                initThreeText();
+            }
+            if (currentSlide === 5) {
+                startTypingEffect();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateDisplay();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateDisplay();
+            }
+        }
+
+        function goToDevPage() {
+            currentSlide = 7;
+            updateDisplay();
+        }
+
+        function restartPortal() {
+            currentSlide = 1;
+            selectedFlowersList = [];
+            const sandbox = document.getElementById('gardenSandbox');
+            if (sandbox) sandbox.innerHTML = '<span id="gardenPlaceholder" class="text-[9px] text-neutral-500 orbitron pointer-events-none">SELECT 3 FLOWERS OR TAP HERE</span>';
+            
+            const usageText = document.getElementById('gardenUsageText');
+            if (usageText) usageText.innerText = '"Your chosen flowers will bloom around the birthday cake & altar!"';
+            
+            const nextBtn3 = document.getElementById('nextBtn3');
+            if (nextBtn3) {
+                nextBtn3.disabled = true;
+                nextBtn3.className = 'orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-500 font-bold rounded-xl cursor-not-allowed transition text-xs';
+            }
+            
+            const dayEl = document.getElementById('selectDay');
+            const monthEl = document.getElementById('selectMonth');
+            const yearEl = document.getElementById('selectYear');
+            if (dayEl) dayEl.value = '';
+            if (monthEl) monthEl.value = '';
+            if (yearEl) yearEl.value = '';
+
+            const nextBtn2 = document.getElementById('nextBtn2');
+            if (nextBtn2) {
+                nextBtn2.disabled = true;
+                nextBtn2.className = 'orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-500 font-bold rounded-xl cursor-not-allowed transition text-xs';
+            }
+
+            const dobHint = document.getElementById('dobHint');
+            if (dobHint) {
+                dobHint.innerText = "Select 01 / 10 / 2010 to verify! ";
+                dobHint.className = "text-[10px] orbitron text-amber-400";
+            }
+
+            const candlesContainer = document.getElementById('candlesContainer');
+            const cakeLeft = document.getElementById('cakeLeft');
+            const cakeRight = document.getElementById('cakeRight');
+            const cakeKnifeLine = document.getElementById('cakeKnifeLine');
+            if (candlesContainer) candlesContainer.style.opacity = '1';
+            if (cakeLeft) cakeLeft.style.transform = 'translateX(0) rotate(0deg)';
+            if (cakeRight) cakeRight.style.transform = 'translateX(0) rotate(0deg)';
+            if (cakeKnifeLine) cakeKnifeLine.style.opacity = '0';
+
+            const cutBtn = document.getElementById('cutCakeBtn');
+            if (cutBtn) {
+                cutBtn.disabled = false;
+                cutBtn.innerText = "SLICE CAKE NOW ";
+                cutBtn.className = "orbitron w-full py-2.5 bg-neonGreen text-neutral-950 font-extrabold rounded-xl shadow-neon-green hover:scale-[1.02] transition-all text-xs cursor-pointer";
+            }
+
+            updateDisplay();
+        }
+
+        function verifyDobSelection() {
+            const d = document.getElementById('selectDay').value;
+            const m = document.getElementById('selectMonth').value;
+            const y = document.getElementById('selectYear').value;
+            const hint = document.getElementById('dobHint');
+            const nextBtn2 = document.getElementById('nextBtn2');
+            
+            if (d === '01' && m === '10' && y === '2010') {
+                if (hint) {
+                    hint.innerText = "Date verified successfully! Click 'Verify' ";
+                    hint.className = "text-[10px] orbitron text-neonGreen";
+                }
+                if (nextBtn2) {
+                    nextBtn2.disabled = false;
+                    nextBtn2.className = 'orbitron flex-1 py-2.5 bg-gradient-to-r from-neonBlue to-neonPurple text-white font-bold rounded-xl shadow-neon-blue hover:scale-105 transition text-xs cursor-pointer';
+                }
+            } else if (d && m && y) {
+                if (hint) {
+                    hint.innerText = "Incorrect birth date! Please select 01 / 10 / 2010 ";
+                    hint.className = "text-[10px] orbitron text-amber-400";
+                }
+                if (nextBtn2) {
+                    nextBtn2.disabled = true;
+                    nextBtn2.className = 'orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-500 font-bold rounded-xl cursor-not-allowed transition text-xs';
+                }
+            } else {
+                if (hint) {
+                    hint.innerText = "Select 01 / 10 / 2010 to verify! ";
+                    hint.className = "text-[10px] orbitron text-amber-400";
+                }
+                if (nextBtn2) {
+                    nextBtn2.disabled = true;
+                    nextBtn2.className = 'orbitron flex-1 py-2.5 bg-neutral-800 text-neutral-500 font-bold rounded-xl cursor-not-allowed transition text-xs';
+                }
+            }
+        }
+
+        function checkDobAndUnlock() {
+            const d = document.getElementById('selectDay').value;
+            const m = document.getElementById('selectMonth').value;
+            const y = document.getElementById('selectYear').value;
+            if (d === '01' && m === '10' && y === '2010') {
+                nextSlide();
+            }
+        }
+
+        let selectedFlowersList = [];
+        function selectFlower(flowerSymbol, flowerName) {
+            if (selectedFlowersList.length < 3) {
+                selectedFlowersList.push(flowerSymbol);
+                updateBouquetDisplay();
+                addFlowerToSandbox(flowerSymbol, null, null);
+            }
+        }
+
+        function plantExtraFlower(event) {
+            const sandbox = document.getElementById('gardenSandbox');
+            if (!sandbox) return;
+            const rect = sandbox.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const randomFlowers = ['', '', '', '', '', ''];
+            const chosen = randomFlowers[Math.floor(Math.random() * randomFlowers.length)];
+            
+            addFlowerToSandbox(chosen, x, y);
+        }
+
+        function addFlowerToSandbox(symbol, x, y) {
+            const sandbox = document.getElementById('gardenSandbox');
+            if (!sandbox) return;
+            const placeholder = document.getElementById('gardenPlaceholder');
+            if (placeholder) placeholder.style.display = 'none';
+
+            const span = document.createElement('span');
+            span.innerText = symbol;
+            span.className = "absolute text-lg flower-bloom select-none pointer-events-none";
+            
+            if (x !== null && y !== null) {
+                span.style.left = `${Math.max(10, x - 10)}px`;
+                span.style.top = `${Math.max(10, y - 10)}px`;
+            } else {
+                const randomX = Math.random() * (sandbox.clientWidth - 25) + 10;
+                const randomY = Math.random() * (sandbox.clientHeight - 25) + 5;
+                span.style.left = `${randomX}px`;
+                span.style.top = `${randomY}px`;
+            }
+
+            sandbox.appendChild(span);
+        }
+
+        function updateBouquetDisplay() {
+            const gardenText = document.getElementById('gardenUsageText');
+            const cakeDecor = document.getElementById('cakeFlowerDecor');
+            const nextBtn3 = document.getElementById('nextBtn3');
+
+            if (selectedFlowersList.length === 3) {
+                if (nextBtn3) {
+                    nextBtn3.disabled = false;
+                    nextBtn3.className = 'orbitron flex-1 py-2.5 bg-gradient-to-r from-neonPurple to-neonPink text-white font-bold rounded-xl shadow-neon-purple hover:scale-105 transition text-xs cursor-pointer';
+                }
+                
+                if (gardenText) {
+                    gardenText.innerHTML = ` Activated! Bouquet <span class="text-neonPurple font-bold">${selectedFlowersList.join(' ')}</span> is blooming around the cake & altar!`;
+                }
+                if (cakeDecor) {
+                    cakeDecor.innerHTML = selectedFlowersList.map(f => `<span>${f}</span>`).join('');
+                }
+            }
+        }
+
+        function performVirtualCut() {
+            playBlastSound();
+            const knifeLine = document.getElementById('cakeKnifeLine');
+            const cakeLeft = document.getElementById('cakeLeft');
+            const cakeRight = document.getElementById('cakeRight');
+            const candlesContainer = document.getElementById('candlesContainer');
+            const cutBtn = document.getElementById('cutCakeBtn');
+            const instruction = document.getElementById('cakeInstructionText');
+
+            if (knifeLine) knifeLine.style.opacity = '1';
+            if (instruction) instruction.innerText = " Slicing cake in progress... Perfect cut!";
+
+            setTimeout(() => {
+                if (cakeLeft) cakeLeft.style.transform = 'translateX(-15px) rotate(-5deg)';
+                if (cakeRight) cakeRight.style.transform = 'translateX(15px) rotate(5deg)';
+                if (candlesContainer) candlesContainer.style.opacity = '0.3';
+
+                if (cutBtn) {
+                    cutBtn.innerText = "CAKE SLICED SUCCESSFULLY! ";
+                    cutBtn.disabled = true;
+                    cutBtn.className = "orbitron w-full py-2.5 bg-neonGreen text-neutral-950 font-extrabold rounded-xl shadow-[0_0_25px_rgba(0,255,102,0.8)] text-xs cursor-default";
+                }
+
+                setTimeout(() => {
+                    for (let i = 1; i <= totalSlides; i++) {
+                        const el = document.getElementById(`slide${i}`);
+                        if (el) {
+                            el.classList.remove('slide-active');
+                            el.classList.add('slide-hidden');
+                        }
+                    }
+                    const successEl = document.getElementById('successSlide');
+                    if (successEl) {
+                        successEl.classList.remove('slide-hidden');
+                        successEl.classList.add('slide-active');
+                    }
+                    triggerConfetti();
+                }, 1200);
+            }, 500);
+        }
+
+        const letterMessage = `Happy birthday to you!\n\nAmar wish korar tarika ekhon emoni. Kichu kichu special manus, se shotru hok, bhai hok, bon hok ba bondhu hok, je-i hok na keno, taderke ami bishese kore evabei wish kori. Onno kichu double meaning nibi na, ar vabbi na je eta baniyechi shudhu tor sathe kotha bolar jonno. Eta ami ekdom emni-i baniyechi. Mon korlo onekdin website banaini, ar karo temon birthday-o chilo na, tai tor jonno baniye fellam.\n\nAmon website ageo baniyechi didi, Soumit ar aro dujon-er jonno. Bhabchilam tor didir birthday-teo ekta banabo, kintu oi somoy time chilo na. Minimum 10-15 ghonta lage, tar upor abar ektu pocket thekeo jay, tai banate parini.\n\Se ja hok, enjoy your day! Amar birthday te toh borar mar lekha chilo, setateo tui mone hoy sobtheke beshi anondito hoyechilis. Se kotha na hoy baad deyi, bolle abar onek kotha, ar ami oto bolteo chai na.\n\Once again, tor porom shotru torof theke, Happy Birthday! `;
+        
+        let typingInterval = null;
+        function startTypingEffect() {
+            const container = document.getElementById('typewriterText');
+            if (!container) return;
+            container.innerHTML = '';
+            if (typingInterval) clearInterval(typingInterval);
+
+            let index = 0;
+            container.className = "whitespace-pre-wrap typing-cursor";
+            
+            typingInterval = setInterval(() => {
+                if (index < letterMessage.length) {
+                    const char = letterMessage.charAt(index);
+                    container.innerHTML += char;
+                    if (char !== ' ' && char !== '\n') {
+                        playTypeSound();
+                    }
+                    index++;
+                    container.scrollTop = container.scrollHeight;
+                } else {
+                    clearInterval(typingInterval);
+                    container.className = "whitespace-pre-wrap";
+                }
+            }, 55);
+        }
+
+        function restartTyping() {
+            startTypingEffect();
+        }
+
+        let threeInitialized = false;
+        function initThreeText() {
+            const container = document.getElementById('threeContainer');
+            if (!container || threeInitialized || container.children.length > 0) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 32;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xff007f, 3, 50);
+            pointLight.position.set(10, 10, 20);
+            scene.add(pointLight);
+
+            const pointLight2 = new THREE.PointLight(0x00f3ff, 3, 50);
+            pointLight2.position.set(-10, -10, 20);
+            scene.add(pointLight2);
+
+            const group = new THREE.Group();
+            scene.add(group);
+
+            const loader = new THREE.FontLoader();
+            loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+                const textGeo = new THREE.TextGeometry('ANUSHKA', {
+                    font: font,
+                    size: 2.8,
+                    height: 1.0,
+                    curveSegments: 12,
+                    bevelEnabled: true,
+                    bevelThickness: 0.25,
+                    bevelSize: 0.12,
+                    bevelOffset: 0,
+                    bevelSegments: 5
+                });
+
+                textGeo.center();
+
+                const textMat = new THREE.MeshPhongMaterial({
+                    color: 0xff007f,
+                    emissive: 0xb000ff,
+                    emissiveIntensity: 0.4,
+                    specular: 0x00f3ff,
+                    shininess: 100
+                });
+
+                const textMesh = new THREE.Mesh(textGeo, textMat);
+                group.add(textMesh);
+            }, undefined, function (error) {
+                const geometry = new THREE.BoxGeometry(9, 2.5, 0.8);
+                const material = new THREE.MeshBasicMaterial({ color: 0xff007f });
+                const fallbackMesh = new THREE.Mesh(geometry, material);
+                group.add(fallbackMesh);
+            });
+
+            let isDragging = false;
+            let prevMouseX = 0;
+            let prevMouseY = 0;
+
+            container.addEventListener('mousedown', (e) => { isDragging = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            container.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - prevMouseX;
+                const deltaY = e.clientY - prevMouseY;
+                group.rotation.y += deltaX * 0.01;
+                group.rotation.x += deltaY * 0.01;
+                prevMouseX = e.clientX;
+                prevMouseY = e.clientY;
+            });
+
+            container.addEventListener('touchstart', (e) => { isDragging = true; prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY; });
+            window.addEventListener('touchend', () => { isDragging = false; });
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.touches[0].clientX - prevMouseX;
+                const deltaY = e.touches[0].clientY - prevMouseY;
+                group.rotation.y += deltaX * 0.01;
+                group.rotation.x += deltaY * 0.01;
+                prevMouseX = e.touches[0].clientX;
+                prevMouseY = e.touches[0].clientY;
+            });
+
+            function animate3D() {
+                requestAnimationFrame(animate3D);
+                if (!isDragging) {
+                    group.rotation.y += 0.008;
+                    group.rotation.x += 0.003;
+                }
+                renderer.render(scene, camera);
+            }
+            animate3D();
+            threeInitialized = true;
+        }
+
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            if (canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const colors = ['#ff007f', '#00f3ff', '#b000ff', '#00ff66'];
+
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * (canvas ? canvas.width : 400),
+                y: Math.random() * (canvas ? canvas.height : 800),
+                radius: Math.random() * 2 + 0.5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.3
+            });
+        }
+
+        let confettiList = [];
+        function triggerConfetti() {
+            if (!canvas) return;
+            for (let i = 0; i < 100; i++) {
+                confettiList.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    radius: Math.random() * 4 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedX: (Math.random() - 0.5) * 12,
+                    speedY: (Math.random() - 0.7) * 12,
+                    alpha: 1
+                });
+            }
+        }
+
+        function animateBg() {
+            if (!ctx || !canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 6;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+            });
+
+            confettiList.forEach((c, index) => {
+                c.x += c.speedX;
+                c.y += c.speedY;
+                c.speedY += 0.35;
+                c.alpha -= 0.012;
+
+                if (c.alpha <= 0) {
+                    confettiList.splice(index, 1);
+                    return;
+                }
+
+                ctx.save();
+                ctx.globalAlign = c.alpha;
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
+                ctx.fillStyle = c.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = c.color;
+                ctx.fill();
+                ctx.restore();
+            });
+
+            requestAnimationFrame(animateBg);
+        }
+
+        animateBg();
+    </script>
+</body>
+</html>
+```
